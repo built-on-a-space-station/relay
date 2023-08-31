@@ -66,3 +66,22 @@ it('intercepts events', () => {
 	expect(listener).toHaveBeenCalledTimes(1);
 	expect(listener).toHaveBeenCalledWith(5 * 2);
 });
+
+it('supplies context to mutators', () => {
+	const channel = new Channel('test');
+
+	channel.context('multi', () => 3);
+
+	channel.use('test', (data: number, { context }) => {
+		const multiplier = context('multi');
+		return data * multiplier;
+	});
+
+	const listener = jest.fn();
+
+	channel.on('test', listener);
+	channel.send('test', 5);
+
+	expect(listener).toHaveBeenCalledTimes(1);
+	expect(listener).toHaveBeenCalledWith(5 * 3);
+});
