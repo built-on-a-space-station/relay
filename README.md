@@ -24,14 +24,18 @@ channel.intercept('something').map((data, { event, get }) => {
 }).forward('event').to('other-channel')
 
 constructor(Inject() relay) {
-	this.connect(relay);
+	this.connect(relay.channel('channel'));
 }
 
 connect(relay) {
-	const subscription = relay.channel('thing').on('event', (data) => {
+	const subscription = relay.on('channel', 'event', (data) => {
 
 	})
 }
+
+relay.send('event', data).to('channel');
+
+
 ```
 
 What should this do
