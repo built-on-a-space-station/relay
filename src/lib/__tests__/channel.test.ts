@@ -50,3 +50,19 @@ it('unsubscribes', () => {
 
 	expect(listener).toHaveBeenCalledTimes(1);
 });
+
+it('intercepts events', () => {
+	const channel = new Channel('test');
+
+	channel.use('test', (data: number) => {
+		return data * 2;
+	});
+
+	const listener = jest.fn();
+
+	channel.on('test', listener);
+	channel.send('test', 5);
+
+	expect(listener).toHaveBeenCalledTimes(1);
+	expect(listener).toHaveBeenCalledWith(5 * 2);
+});

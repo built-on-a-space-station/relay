@@ -1,7 +1,9 @@
+import { Mutator } from './mutator';
 import { Subscription } from './subsciption';
-import { Invocation } from './types';
+import { Invocation, MutatorFn } from './types';
 
 export class Channel {
+	private _mutators: Mutator[] = [];
 	private _name: string;
 	private _subscriptions: Subscription[] = [];
 
@@ -25,11 +27,20 @@ export class Channel {
 	}
 
 	send(event: string, data?: any) {
+		const mutators = this._mutators.filter((mut) => mut.event === event);
+		const final = mutators.reduce((acc, curr) => {
+			return curr.mutatorFn(acc);
+		}, data);
+
 		for (const sub of this._subscriptions) {
 			if (sub.event === event) {
-				sub.invocation(data);
+				sub.invocation(final);
 			}
 		}
+	}
+
+	use(event: string, mutatorFn: MutatorFn) {
+		this._mutators.push(new Mutator(event, mutatorFn));
 	}
 
 	// Private methods
