@@ -5,6 +5,12 @@ export class Channel {
 		this._name = name;
 	}
 
+	// Public methods
+
+	on(event: string, data?: any) {}
+
+	// Accessors
+
 	get name() {
 		return this._name;
 	}
