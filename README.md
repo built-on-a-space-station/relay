@@ -1,44 +1,23 @@
 # Relay
 
-> If you don’t have somethin’ nice to say, don’t say nuthin’ at all.
+Relay makes it easy to share messages between parts of your application in a clean, reactive way.
 
-Thumper's mom
+The core of Relay is the `Relay` class, which is comprised of `Channels`. Observers can subscribe to individual events within channels. Channels can intercept and mutate events to keep the data flow clean.
 
-Relay lets modules communicate with each other is a nice, simple way. You want to organize your code into distinct sections. Those sections should stick to what they do best.
+## Basic Usage
 
 ```ts
 const relay = new Relay();
 
-relay.create('')
+relay.create('my channel');
 
-	// or
-const channel = new Channel('something');
-relay.add(channel);
+const handler = () => {
+	console.log('I got called!');
+};
 
-channel.context('store', () => store)
+relay.channel('my channel').on('hello', handler);
 
-channel.intercept('something').map((data, { event, get }) => {
-	const store = get('store');
-	// do stuff
-	return newValue;
-}).forward('event').to('other-channel')
+relay.send('hello').to('my channel');
 
-constructor(Inject() relay) {
-	this.connect(relay.channel('channel'));
-}
-
-connect(relay) {
-	const subscription = relay.on('channel', 'event', (data) => {
-
-	})
-}
-
-relay.send('event', data).to('channel');
-
-
+// "I got called!"
 ```
-
-What should this do
-
-1. Set up interceptors that can transform data
-2. Use channels to keep things separate
