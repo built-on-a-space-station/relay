@@ -10,7 +10,7 @@ export class Relay {
 	}
 
 	public create(name: string) {
-		this.addChannel(name, new Channel(name));
+		return this.addChannel(name, new Channel(name));
 	}
 
 	public channel(name: string): Channel {
@@ -41,6 +41,8 @@ export class Relay {
 		channel.setRelay(this);
 
 		this._channels.set(name, channel);
+
+		return channel;
 	}
 }
 

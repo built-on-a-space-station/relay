@@ -4,9 +4,11 @@ import { Relay } from '../relay';
 it('creates a default channel', () => {
 	const relay = new Relay();
 
-	relay.create('channel');
+	const channel = relay.create('channel');
 
+	expect(channel).toBeInstanceOf(Channel);
 	expect(relay.channel('channel')).toBeInstanceOf(Channel);
+	expect(relay.channel('channel')).toBe(channel);
 });
 
 it('adds a channel', () => {

@@ -9,19 +9,39 @@ The core of Relay is the `Relay` class, which is comprised of `Channels`. Observ
 ```ts
 const relay = new Relay();
 
-relay.create('channel1');
+const channel = relay.create('channel1');
 
-const handler = () => {
-	console.log('I got called!');
-};
+const unsubscribe = channel.on('hello', () => console.log('I got called!'));
 
-const unsubscribe = relay.channel('channel1').on('hello', handler);
-
-relay.send('hello').to('channel1');
+channel.send('hello');
 
 // "I got called!"
 
 unsubscribe();
+```
+
+Channels can also be created from scratch.
+
+```ts
+const channel = new Channel('mtv');
+
+relay.add(channel);
+```
+
+## Sending Events
+
+Send an event directly to a channel.
+
+```ts
+const channel = relay.channel('channel1');
+
+channel.send('hello');
+```
+
+Alternatively, the relay can handle dispatching of events.
+
+```ts
+relay.send('hello').to('channel1');
 ```
 
 ## Broadcasts
@@ -30,14 +50,6 @@ You can send an event to every channel by broadcasting directly to the relay.
 
 ```ts
 relay.broadcast('hello');
-```
-
-## Centralized Control
-
-Or, send an event to a specific channel:
-
-```ts
-relay.send('hello').to('channel1');
 ```
 
 ## Event Data Transformations
