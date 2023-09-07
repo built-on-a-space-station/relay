@@ -2,8 +2,13 @@
 	"name": "@space-station/relay",
 	"version": "0.1.0",
 	"description": "Simple reactive programming module",
-	"main": "index.js",
+	"main": "dist/index.js",
+	"files": [
+		"dist"
+	],
+	"types": "dist/index.d.ts",
 	"scripts": {
+		"build": "tsc --declaration",
 		"format": "prettier . --write",
 		"prepare": "husky install",
 		"test": "jest",
