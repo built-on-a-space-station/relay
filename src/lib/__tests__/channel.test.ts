@@ -11,44 +11,44 @@ it('initializes with the specified name', () => {
 it('subscribes to an event', () => {
 	const channel = new Channel('test');
 
-	const listener = jest.fn();
+	const observer = jest.fn();
 
-	channel.on('test-event', listener);
+	channel.on('test-event', observer);
 	channel.send('test-event', 'data');
 
-	expect(listener).toHaveBeenCalledTimes(1);
-	expect(listener).toHaveBeenCalledWith('data');
+	expect(observer).toHaveBeenCalledTimes(1);
+	expect(observer).toHaveBeenCalledWith('data');
 });
 
 it('emits multiple events', () => {
 	const channel = new Channel('test');
 
-	const listener = jest.fn();
+	const observer = jest.fn();
 
-	channel.on('test-event', listener);
+	channel.on('test-event', observer);
 
 	[...Array(10)].forEach(() => {
 		channel.send('test-event');
 	});
 
-	expect(listener).toHaveBeenCalledTimes(10);
+	expect(observer).toHaveBeenCalledTimes(10);
 });
 
 it('unsubscribes', () => {
 	const channel = new Channel('test');
 
-	const listener = jest.fn();
+	const observer = jest.fn();
 
-	const unsubscribe = channel.on('test-event', listener);
+	const unsubscribe = channel.on('test-event', observer);
 	channel.send('test-event');
 
-	expect(listener).toHaveBeenCalledTimes(1);
+	expect(observer).toHaveBeenCalledTimes(1);
 
 	unsubscribe();
 
 	channel.send('test-event');
 
-	expect(listener).toHaveBeenCalledTimes(1);
+	expect(observer).toHaveBeenCalledTimes(1);
 });
 
 it('intercepts events', () => {
@@ -58,13 +58,13 @@ it('intercepts events', () => {
 		return data * 2;
 	});
 
-	const listener = jest.fn();
+	const observer = jest.fn();
 
-	channel.on('test', listener);
+	channel.on('test', observer);
 	channel.send('test', 5);
 
-	expect(listener).toHaveBeenCalledTimes(1);
-	expect(listener).toHaveBeenCalledWith(5 * 2);
+	expect(observer).toHaveBeenCalledTimes(1);
+	expect(observer).toHaveBeenCalledWith(5 * 2);
 });
 
 it('supplies context to mutators', () => {
@@ -77,11 +77,11 @@ it('supplies context to mutators', () => {
 		return data * multiplier;
 	});
 
-	const listener = jest.fn();
+	const observer = jest.fn();
 
-	channel.on('test', listener);
+	channel.on('test', observer);
 	channel.send('test', 5);
 
-	expect(listener).toHaveBeenCalledTimes(1);
-	expect(listener).toHaveBeenCalledWith(5 * 3);
+	expect(observer).toHaveBeenCalledTimes(1);
+	expect(observer).toHaveBeenCalledWith(5 * 3);
 });

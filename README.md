@@ -9,15 +9,81 @@ The core of Relay is the `Relay` class, which is comprised of `Channels`. Observ
 ```ts
 const relay = new Relay();
 
-relay.create('my channel');
+relay.create('channel1');
 
 const handler = () => {
 	console.log('I got called!');
 };
 
-relay.channel('my channel').on('hello', handler);
+const unsubscribe = relay.channel('channel1').on('hello', handler);
 
-relay.send('hello').to('my channel');
+relay.send('hello').to('channel1');
 
 // "I got called!"
+
+unsubscribe();
 ```
+
+## Broadcasts
+
+You can send an event to every channel by broadcasting directly to the relay.
+
+```ts
+relay.broadcast('hello');
+```
+
+## Centralized Control
+
+Or, send an event to a specific channel:
+
+```ts
+relay.send('hello').to('channel1');
+```
+
+## Event Data Transformations
+
+Channels can apply middleware to events. Combined with context, this allows you to purely transform data before it is consumed by listeners.
+
+```ts
+const store = { multiplier: 2 };
+
+channel.context('store', () => store);
+
+channel.use('hello', (count: number, { context }) => {
+	const store = context('store');
+
+	return count * store.multiplier;
+});
+
+const handler = (count: number) => {
+	console.log(`I said "hello" ${count} times today!`);
+};
+
+channel.on('hello', handler);
+
+channel.send('hello', 5);
+
+// 'I said "hello" 10 times today!'
+```
+
+You can apply multiple middleware to a channel either by calling `channel.use(...)` multiple times or via chaining. Mutators are applied to the event data in the same order that they are registered on the channel.
+
+## Event Forwarding
+
+Sometimes you might want to capture an event in one channel and then forward it to another.
+
+```ts
+channel.forward('hello', { to: 'channel2' });
+```
+
+In this case, any middleware will first be applied to the event data. Oberservers for the "hello" event will be triggered in both the origin channel and the "channel2" channel.
+
+You can rename the event sent to the channel as well.
+
+```ts
+channel.forward('hello', { to: 'channel2', as: 'hola' });
+```
+
+## Notes
+
+And that's it (for now)!

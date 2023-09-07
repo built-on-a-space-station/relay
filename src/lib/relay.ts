@@ -38,6 +38,8 @@ export class Relay {
 			throw new Error(`Channel already registered: ${name}`);
 		}
 
+		channel.setRelay(this);
+
 		this._channels.set(name, channel);
 	}
 }
