@@ -7,6 +7,9 @@
 		"dist"
 	],
 	"types": "dist/index.d.ts",
+	"repository": {
+		"url": "https://github.com/built-on-a-space-station/relay"
+	},
 	"scripts": {
 		"build": "tsc --declaration",
 		"format": "prettier . --write",
